@@ -8,7 +8,7 @@ from create_database import *
 from get_categorie import *
 
 #Dé-commenté pour retélécharger les pages en cas de mises à jour de Diablo et de changements dans les items
-#get_page(dir_storage)
+get_page(dir_storage)
 
 #DEBUG supprime les fichiers temporaires se trouvant dans le repertoire d'execution
 clean(".", True)
