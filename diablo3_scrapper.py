@@ -37,4 +37,3 @@ for element in url_extension:
 #clean(".", False)
 #Essaie de la base de données
 #test_bd(DB_NAME)
-clean(".", False)
