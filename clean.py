@@ -4,9 +4,7 @@ from CONSTANT import *
 def clean(dir_name, bool_del_DB):
 
     for element in os.listdir(dir_name):
-        if (element in url_extension):
-            os.remove(element)
-        elif (str(element).replace(".html", "") in url_extension):
+        if (str(element).replace(".html", "") in url_extension):
             os.remove(element)
         else:
             pass
