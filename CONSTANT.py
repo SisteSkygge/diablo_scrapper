@@ -6,5 +6,5 @@ url_extension = ("helm","spirit-stone","voodoo-mask","wizard-hat","pauldrons","c
 
 file_with_categorie="categorie_file"
 dir_storage = "html_data"
-#Nom de la base de données
+#Nom de la base de donnees
 DB_NAME = "diablo3_object.bd"

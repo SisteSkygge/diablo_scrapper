@@ -1,33 +1,34 @@
+#-*- coding:utf-8 -*-
 import sqlite3
 import os
 from CONSTANT import *
 
 def create_database():
     """
-        L'utilisation de ce scrypt EFFACE l'ancienne base de données et en créer une nouvelle,
-        elle efface donc les données déjà enregistrés.
-        Il permet aussi d'apporter des modifications à la structure de la base de données
+        L'utilisation de ce scrypt EFFACE l'ancienne base de donnees et en creer une nouvelle,
+        elle efface donc les donnees deja enregistres.
+        Il permet aussi d'apporter des modifications a la structure de la base de donnees
 
-        Le choix de sqlite3 est voulu, je souhaite une base de données légère et locale
+        Le choix de sqlite3 est voulu, je souhaite une base de donnees legere et locale
         pour ceux souhaitant utiliser un SGBD de type Mysql, PostGreSQL, ...;
-        voici la structure de la base de données
+        voici la structure de la base de donnees
     """
 
-    #Détecte si dans le fichier ou s'éxécute le script se trouve la base de données
+    #Detecte si dans le fichier ou s'execute le script se trouve la base de donnees
     if(DB_NAME in os.listdir(".")):
-        print("La base de données a été trouvé")
+        print("La base de donnees a ete trouve")
         print("Suppression en cours...")
         os.remove(DB_NAME)
-        print("Base de données supprimé")
+        print("Base de donnees supprime")
     else:
-        print("La base de données n'a pas été trouvé")
+        print("La base de donnees n'a pas ete trouve")
 
-    print("Création d'une nouvelle base de données en cours...")
+    print("Creation d'une nouvelle base de donnees en cours...")
 
-    #On créer la base de données
+    #On cree la base de donnees
     db = sqlite3.connect(DB_NAME)
 
-    #On execute le code SQL permettant de créer la structure de la table
+    #On execute le code SQL permettant de creer la structure de la table
     db.execute("""
         CREATE TABLE Objet(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,16 +56,15 @@ def create_database():
     db.commit()
     db.close()
 
-def add_data_to_database(DB_NAME, file_name):
-    """ Cette fonction sert à lire les file_name, traité par un programme précédent, de lire les lignes et suivant les elements de la ligne lu décidé, si on créer un nouvel item, propriete, fabrique etc..."""
+def add_data_to_database(db_var, file_name, categorie_list):
+    """ Cette fonction sert a lire les file_name, traite par un programme precedent, de lire les lignes et suivant les elements de la ligne lu decide, si on creer un nouvel item, propriete, fabrique etc..."""
 
     #Un enregistrement commence
-    #Après la catégorie il y a un nombre seul, celui-ci est lié à la ligne qui suit
+    #Apres la categorie il y a un nombre seul, celui-ci est lie a la ligne qui suit
     with open(file_name, 'r', encoding="utf-8") as saving_file:
         ligne = saving_file.readlines()
     saving_file.close()
 
-    db = sqlite3.connect(DB_NAME)
     property_list = []
     primary = 1
     phase = 0
@@ -74,22 +74,24 @@ def add_data_to_database(DB_NAME, file_name):
     qualite = ""
     fabricant = ""
 
+    quality_possible = ["rares","rare", "legendaire", "legendaires", "ensemle", "ensembles", "d'ensembles", "d'ensemble", "magique", "magiques"]
+
     for i in range(len(ligne)-1):
-        if("Aucun objet à afficher" in ligne[i]):
-            #On est à la fin du fichier et le programme POURRA PEUT ETRE crash en faisant un overflow si on ne lui indique pas de s'arrêter avant.
+        if("Aucun objet a afficher" in ligne[i]):
+            #On est a la fin du fichier et le programme POURRA PEUT ETRE crash en faisant un overflow si on ne lui indique pas de s'arreter avant.
             break
         elif("&" in ligne[i]):
             #New section
             #S'il y a des enregistrements alors on les sauvegarde
             if(nom!=""):
-                db.execute("""INSERT INTO Objet(name, categorie, qualite, account_bound) VALUES(?, ?, ?, ?);""", (nom, categorie, qualite, account_bound))
-                #On recupere l'id de l'objet rajouter pour pouvoir l'utiliser en clé étrangère dans les requètes suivantes
-                id_max = int(db.execute("""SELECT max(id) FROM Objet""").fetchone()[0])
+                db_var.execute("""INSERT INTO Objet(name, categorie, qualite, account_bound) VALUES(?, ?, ?, ?);""", (nom, categorie, qualite, account_bound))
+                #On recupere l'id de l'objet rajouter pour pouvoir l'utiliser en cle etrangere dans les requetes suivantes
+                id_max = int(db_var.execute("""SELECT max(id) FROM Objet""").fetchone()[0])
                 for element in property_list:
                     ligne_buffer = element.split("\t")
-                    db.execute("""INSERT INTO Propriete(id_objet, intitule, primary_prop) VALUES(?, ?, ?);""", (id_max, ligne_buffer[0], ligne_buffer[1]))
+                    db_var.execute("""INSERT INTO Propriete(id_objet, intitule, primary_prop) VALUES(?, ?, ?);""", (id_max, ligne_buffer[0], ligne_buffer[1]))
                 if(fabricant!=""):
-                    db.execute("""INSERT INTO Fabrique(id_objet, fabriquant) VALUES(?, ?);""", (id_max, fabricant))
+                    db_var.execute("""INSERT INTO Fabrique(id_objet, fabriquant) VALUES(?, ?);""", (id_max, fabricant))
 
                 #On a fini on reset tout
                 primary = 1
@@ -102,42 +104,41 @@ def add_data_to_database(DB_NAME, file_name):
             phase = 1
         elif(phase==1):
             #si la phase==1 alors on est sur la ligne de la categorie
-            ligne_buffer = ligne[i].split(" ")
+            ligne_buffer = ligne[i].replace("\n", "").replace("d'", "").split(" ")
             if(len(ligne_buffer)==1):
                 qualite = "Normal"
-                categorie = ligne_buffer[0].replace("\n", "")
+                categorie = ligne_buffer[0]
             else:
-                #On fait un replace "d'" dans le cas ou la qualite de l'item est "d'ensemble" car le split se fait au niveau des espaces
-                qualite = ligne_buffer[len(ligne_buffer)-1].replace("d'", "").replace("\n", "")
+                qualite = ligne_buffer[len(ligne_buffer)-1]
                 for j in range(len(ligne_buffer)-2):
-                    if(j!=len(ligne_buffer)-2):
-                        categorie += ligne_buffer[j]+" "
-                    else:
-                        categorie += ligne_buffer[j]
+                    categorie += ligne_buffer[j]+" "
+                if(qualite not in quality_possible):
+                    categorie += qualite
+                    qualite = "Normal"
             phase = 2
         else:
-            #On recupere la caracteristique principal -> Armure, dégâts par seconde, ces données sont positionnés sur deux lignes
-            #Pas besoin de s'occuper du fait que certains items n'en possèdent pas car si il n'en possède pas alors cette enregistrement est un nom d'item et la premiere condition du if s'en occupe
-            if(ligne[i]=="Armure\n" or ligne[i]=="Primaires\n"):
+            #On recupere la caracteristique principal -> Armure, degats par seconde, ces donnees sont positionnes sur deux lignes
+            #Pas besoin de s'occuper du fait que certains items n'en possedent pas car si il n'en possede pas alors cette enregistrement est un nom d'item et la premiere condition du if s'en occupe
+            if(ligne[i]=="Armure\n" or ligne[i]=="Primaires\n" or "(Niveau" in ligne[i]):
                 pass
             elif(ligne[i]=="Secondaires\n"):
                 primary = 0
             elif("Account Bound" in ligne[i]):
                 account_bound = 1
-            elif("Crée par" in ligne[i]):
+            elif("Cree par" in ligne[i]):
                 ligne_buffer = ligne[i].split(" ")
                 fabricant = str(ligne_buffer[len(ligne_buffer)-1]).replace("\n", "")
                 i += 1
-                #On increment I pour passer la ligne indiquant le niveau d'artisanat requis pour créer l'item
-            elif("Armure" in ligne[i+1] or "Dégâts par seconde" in ligne[i+1]):
+                #On increment I pour passer la ligne indiquant le niveau d'artisanat requis pour creer l'item
+            elif("Armure" in ligne[i+1] or "Degâts par seconde" in ligne[i+1]):
                 #On est dans le cas de la propriete sur 2 lignes
                 property_list.append(str(str(ligne[i]).replace("\n", " ")+str(ligne[i+1])+"\t"+str(primary)))
                 i += 1
-                #On incremente de 1 i pour passer la ligne qu'on a noté en avance
+                #On incremente de 1 i pour passer la ligne qu'on a note en avance
             else:
                 property_list.append(str(str(ligne[i]).replace("\n", "")+"\t"+str(primary)))
-    db.commit()
-    db.close()
+
+    db_var.commit()
 
 
 if (__name__ == "__main__"):

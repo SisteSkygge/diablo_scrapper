@@ -4,10 +4,10 @@ def select(borne_entree, borne_sortie, file_name):
     """Active l'enregistrement d'un fichier quand le pointeur de fichier se trouvent entre
     2 elements presents dans le texte"""
 
-    #Initialisation de la variable qui servira à stocker le résultat de la fonction
+    #Initialisation de la variable qui servira a stocker le resultat de la fonction
     stockage = ""
-    #Iniatialisation d'une variable permettant de déclencher ou non quand l'algorithme doit
-    #Rajouter les éléments du fichier dans la variable stockage
+    #Iniatialisation d'une variable permettant de declencher ou non quand l'algorithme doit
+    #Rajouter les elements du fichier dans la variable stockage
     active = 0
     with open(file_name, 'r', encoding="utf-8") as file_handler:
         #line = "a" Pour remplir une premiere la condition de la boucle while pour ne pas
@@ -16,8 +16,8 @@ def select(borne_entree, borne_sortie, file_name):
         while(line!=""):
             line = file_handler.readline()
 
-            #On supprime les tabulations pour que celles-ci gènent lors de la comparaison
-            #de string de même, on oubliera pas dans les arguments le \n s'il est nécessaire
+            #On supprime les tabulations pour que celles-ci genent lors de la comparaison
+            #de string de même, on oubliera pas dans les arguments le \n s'il est necessaire
             line = line.replace("\t", "")
 
             #On active l'enregistrement du fichier dans la variable stockage
@@ -31,7 +31,7 @@ def select(borne_entree, borne_sortie, file_name):
                 else:
                     stockage += line
 
-            #On désactive l'enregistrement
+            #On desactive l'enregistrement
             if(line==borne_sortie):
                 active = 0
 
@@ -41,15 +41,15 @@ def select(borne_entree, borne_sortie, file_name):
         saving_file.close()
 
 def remove_balise(file_name):
-    """ Cette fonction enlève toutes les balises d'un fichier texte et l'enregistre dans le fichier texte"""
+    """ Cette fonction enleve toutes les balises d'un fichier texte et l'enregistre dans le fichier texte"""
 
     active = 0
     stockage = ""
 
     with open(file_name, 'r', encoding="utf-8") as saving_file:
-        #Pour que la condition soit validé pour rentrer une premiere fois dans la boucle
+        #Pour que la condition soit valide pour rentrer une premiere fois dans la boucle
         line = " "
-        #Variable qui stockera le texte que l'on ré-écrira dans le fichier
+        #Variable qui stockera le texte que l'on re-ecrira dans le fichier
         stockage = ""
         #On recupere toutes les lignes du fichier sous forme de list
         line = saving_file.readlines()
@@ -82,14 +82,14 @@ def remove_balise(file_name):
                     stockage += str(letter)
 
     saving_file.close()
-    #On ferme le fichier pour pouvoir le ré-ouvrir en mode écriture
-    #On se débarasse des derniers artefacts restants pour que le fichier soit plus lisible pour un humain
+    #On ferme le fichier pour pouvoir le re-ouvrir en mode ecriture
+    #On se debarasse des derniers artefacts restants pour que le fichier soit plus lisible pour un humain
     #Les artefacts restant sont des ">" ou des lignes vides avec juste un "\n"
     stockage = stockage.replace(">", "")
     with open(file_name, 'w', encoding="utf-8") as saving_file:
         saving_file.write(stockage)
     saving_file.close()
-    #On le ré-ouvre pour récuperer une liste des lignes
+    #On le re-ouvre pour recuperer une liste des lignes
     with open(file_name, 'r', encoding="utf-8") as saving_file:
         file_handler = saving_file.readlines()
         stockage=""
@@ -99,18 +99,18 @@ def remove_balise(file_name):
                 for letter in element:
                     stockage += letter
     saving_file.close()
-    #On ferme le fichier pour le ré-ouvrir en mode écriture après
-    #On sauvegarde le contenu de stockage dans le fichier, cela sera le résultat final de la fonction
+    #On ferme le fichier pour le re-ouvrir en mode ecriture apres
+    #On sauvegarde le contenu de stockage dans le fichier, cela sera le resultat final de la fonction
     with open(file_name, 'w', encoding="utf-8") as saving_file:
         saving_file.write(stockage)
     saving_file.close()
 
 def remove_int(file_name):
-    """ Elimine les INT restant dans les fichiers servant à décrire le numéro de ligne pour le tableau dans lequel les objets étaient stockés"""
+    """ Elimine les INT restant dans les fichiers servant a decrire le numero de ligne pour le tableau dans lequel les objets etaient stockes"""
 
-    #Pour cela on récupérera les lignes du fichier dans une liste, On regardera si la ligne contient une "," cela signifiera alors que c'est un nombre à virgule donc on ne touche pas.
+    #Pour cela on recuperera les lignes du fichier dans une liste, On regardera si la ligne contient une "," cela signifiera alors que c'est un nombre a virgule donc on ne touche pas.
     #Si la ligne n'en contient pas alors on essaiera de convertir la ligne en INT, si sa fonctionne alors on n'enregistre pas la ligne dans stockage, si cela ne fonctionne pas alors on enregistre la ligne dans stockage
-    # REMARQUE : les "\n" ne génent pas à la convertion des string en INT
+    # REMARQUE : les "\n" ne genent pas a la convertion des string en INT
 
     stockage =""
 
@@ -118,21 +118,21 @@ def remove_int(file_name):
     with open(file_name, 'r', encoding="utf-8") as saving_file:
         ligne = saving_file.readlines()
     saving_file.close()
-    #On navigue dans les éléments
+    #On navigue dans les elements
     for element in ligne:
         if("," in element):
             for letter in element:
                 stockage += letter
         else:
             try:
-                #On essaie de convertir, si sa marche on ne fait rien , si sa échoue alors on enregistre l'élément dans stockage
+                #On essaie de convertir, si sa marche on ne fait rien , si sa echoue alors on enregistre l'element dans stockage
                 int(element)
             except:
-                #la convertion en INT à échouer on enregistre l'element dans stockage
+                #la convertion en INT a echouer on enregistre l'element dans stockage
                 for letter in element:
                     stockage += letter
 
-    #On ouvre le file_name en mode ecriture pour y écrire stockage
+    #On ouvre le file_name en mode ecriture pour y ecrire stockage
     with open(file_name, 'w', encoding="utf-8") as saving_file:
         saving_file.write(stockage)
     saving_file.close()
@@ -144,7 +144,7 @@ def remove_first_character_space(file_name):
     saving_file.close()
 
     for element in ligne:
-        #Remplace les , par des . problemes de la version francaise de la page html, comme en France on utilise des virgules à la place des points pour les nombres décimaux
+        #Remplace les , par des . problemes de la version francaise de la page html, comme en France on utilise des virgules a la place des points pour les nombres decimaux
         element = element.replace(",", ".")
         if (element[0]==" "):
             element = element.replace(" ", "", 1)

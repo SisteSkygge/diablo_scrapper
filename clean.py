@@ -13,5 +13,8 @@ def clean(dir_name, bool_del_DB):
         if(element==DB_NAME and bool_del_DB==True):
             os.remove(DB_NAME)
 
+        if(".pyc" in element):
+            os.remove(element)
+
 if "__main__" == __name__:
     clean(".", True)

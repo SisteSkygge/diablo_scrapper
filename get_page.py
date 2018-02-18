@@ -12,7 +12,7 @@ def get_page(dir_storage):
     for element in url_extension:
         #On recupere la page HTML
         file_handler = requests.get("https://eu.battle.net/d3/fr/item/"+str(element)+"/", stream=True)
-        #On affiche le code de status après avoir récupérer la page HTML voir si il y a une erreur ou non
+        #On affiche le code de status apres avoir recuperer la page HTML voir si il y a une erreur ou non
         print(str(element)+" : "+str(file_handler))
         #On sauvegarde la page HTML dans un fichier
         with open(dir_storage+"/"+element, 'wb') as saving_file:
