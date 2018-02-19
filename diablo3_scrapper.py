@@ -56,8 +56,13 @@ for element in url_extension:
     add_data_to_database(db, element, categorie_list)
 
 #De-commente pour supprimer les fichiers traites des pages HTML
-clean(".", True)
+clean(".", False)
+#DEBUG enlever le dossier de stockage des pages html forcera le retelechargement
+clean_dir("html_data/")
+#DEBUG enleve le fichier creer par python contenant des .pyc
+clean_dir("__pycache__/")
 #Essaie de la base de donnees en copiant toutes les tables se trouvant dans la base de donnees
-test_bd(db)
+#DEBUG
+#test_bd(db)
 #Ferme la connection
 db.close()

@@ -74,8 +74,6 @@ def add_data_to_database(db_var, file_name, categorie_list):
     qualite = ""
     fabricant = ""
 
-    quality_possible = ["rares","rare", "legendaire", "legendaires", "ensemle", "ensembles", "d'ensembles", "d'ensemble", "magique", "magiques"]
-
     for i in range(len(ligne)-1):
         if("Aucun objet a afficher" in ligne[i]):
             #On est a la fin du fichier et le programme POURRA PEUT ETRE crash en faisant un overflow si on ne lui indique pas de s'arreter avant.
@@ -99,22 +97,39 @@ def add_data_to_database(db_var, file_name, categorie_list):
                 account_bound = 0
                 fabricant = ""
                 categorie = ""
+
             nom = ligne[i].replace("&", "").replace("\n", "")
             #On enleve le repere comme il ne nous ait plus utile
             phase = 1
         elif(phase==1):
             #si la phase==1 alors on est sur la ligne de la categorie
-            ligne_buffer = ligne[i].replace("\n", "").replace("d'", "").split(" ")
-            if(len(ligne_buffer)==1):
+            #La phase 1 sert a enregistrer la qualite d'un item et sa categorie
+            found_quality = 0
+            for element in item_qualite:
+                if(element in ligne[i]):
+                    #On retire l'espace du debut et le d' de d'ensemble
+                    qualite = element.replace(" ", "")
+                    qualite = qualite.replace("\n", "")
+                    qualite = qualite.replace("d'", "")
+                    found_quality = 1
+                    break
+
+            categorie = ligne[i]
+
+            if(found_quality==0):
                 qualite = "Normal"
-                categorie = ligne_buffer[0]
-            else:
-                qualite = ligne_buffer[len(ligne_buffer)-1]
-                for j in range(len(ligne_buffer)-2):
-                    categorie += ligne_buffer[j]+" "
-                if(qualite not in quality_possible):
-                    categorie += qualite
-                    qualite = "Normal"
+                categorie = categorie.replace("\n", "")
+
+            #Pour cause d'un bug je suis oblige de faire comme cela plutot que de l'integrer a l'autre boucle
+            #juste au-dessus
+            for element in item_qualite:
+                categorie = categorie.replace(element, "")
+            #Python a un probleme a reconnaitre "d'ensemble" correction comme suit
+            if("ensemble" in categorie):
+                qualite = "ensemble"
+                categorie = categorie.replace("ensemble", "")
+                categorie = categorie[:-3]
+
             phase = 2
         else:
             #On recupere la caracteristique principal -> Armure, degats par seconde, ces donnees sont positionnes sur deux lignes
