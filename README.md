@@ -10,7 +10,9 @@ Pour éxécuter le programme il suffit de lancer "diablo3_scrapper.py", tel qu'i
 Toutefois il est possible de modifier quelques arguments des fonctions pour garder les fichiers html de base traités par le programme dans un répertoire, il est possible de gardé les fichiers html une fois traitée (donc une fois que tout le code html et les parties inintéressantes supprimées), 
 
 il est possible de ne pas re-télécharger à chaque fois les fichiers html ce qui prend le plus de temps lors de l'éxécution du programme du programme pour cela il suffit de mettre en commentaire la fonction "get_page()" et de mettre en commentaire à la fin du fichier principal la ligne "clean_dir('html_data/')"
+
 --------------------------------------------------------------
+
 EXPLICATION DE L'UTILISATION DE CHAQUE FICHIER :
 
 diablo3_scrapper.py : Fichier principal d'éxécution
@@ -24,6 +26,7 @@ clean.py : Fournit des fonctions permettant de nettoyer le répertoire d'éxécu
 test_db.py : Fournit une fonction affichant toutes les lignes de la base de données
 
 --------------------------------------------------------------
+
 MOT DU DÉVELOPPEUR : 
 
 Le projet est terminé, toutefois il reste quelques améliorations possible sur plusieurs points :
@@ -38,13 +41,16 @@ je ne souhaite pas continuer de l'améliorer pour plusieurs raisons :
 Je m'excuse par avance à toutes les personnes qui liront et développeront à partir de ce code source je n'ai pas été rigoureux sur le nommage des différentes variables, fonction, etc... et supprimés certains commentaires qui n'ont plus de sens au point de développement actuel du projet, je ne prend pas le temps de corriger tout cela par manque d'envie comme citer plus haut car pour moi cela n'a plus d'importance, ce projet ne m'intéresse plus, j'en ai tiré les enseignements que je recherchais en le commançant avant de l'avoir terminé.
   
 ---------------------------------------------------------------
+
 DÉVELOPPEUR :
 
 GILLES Marco
 
 Temps de développement : Janvier-Février 2018
 Actuellement en 1er année d'IUT Informatique à l'université Nice Côte d'Azur (année scolaire 2017-2018)
+
 ----------------------------------------------------------------
+
 COPYRIGHT
 
 Creative Commons BY NC SA
