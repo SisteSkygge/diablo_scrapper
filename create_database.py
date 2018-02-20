@@ -140,7 +140,7 @@ def add_data_to_database(db_var, file_name, categorie_list):
                 primary = 0
             elif("Account Bound" in ligne[i]):
                 account_bound = 1
-            elif("Cree par" in ligne[i]):
+            elif("Créé par" in ligne[i]):
                 ligne_buffer = ligne[i].split(" ")
                 fabricant = str(ligne_buffer[len(ligne_buffer)-1]).replace("\n", "")
                 i += 1

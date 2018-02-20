@@ -63,6 +63,6 @@ clean_dir("html_data/")
 clean_dir("__pycache__/")
 #Essaie de la base de donnees en copiant toutes les tables se trouvant dans la base de donnees
 #DEBUG
-#test_bd(db)
+test_bd(db)
 #Ferme la connection
 db.close()
